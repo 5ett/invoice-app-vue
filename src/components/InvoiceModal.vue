@@ -3,7 +3,9 @@
       <form action="" @submit.prevent="submitForm" class="invoice-content">
         <Loading v-show="loading"/>  
         <div class="title-bar flex">
-            <h1>New Invoice</h1>  
+            <h1 v-if="!editInvoice">New Invoice</h1>  
+            <h1 v-else>Edit Invoice</h1> 
+
             <div @click="closeInvoice" class="close">X</div>
             
         </div>
@@ -127,8 +129,9 @@
                 <button @click="closeInvoice" class="red" type="button">Cancel</button>
             </div>
             <div class="rigth flex">
-                <button @click="saveDraft" class="dark-purple">Save Draft</button>
-                <button @click="publishInvoice" class="purple">Complete</button>
+                <button v-if="!editInvoice" type="submit" @click="saveDraft" class="dark-purple">Save Draft</button>
+                <button v-if="!editInvoice" type="submit" @click="publishInvoice" class="purple">Complete</button>
+                <button v-if="editInvoice" type="submit" @click="updateInvoice" class="purple">Update Invoice</button>
             </div>
         </div>
 
@@ -140,7 +143,7 @@
     import db from "../firebase/firebaseInit";
     import { collection, addDoc} from "firebase/firestore";
     import Loading from "../components/Loading"
-    import {mapMutations} from "vuex";
+    import {mapMutations, mapState} from "vuex";
     import {uid} from "uid"
 
     export default {
@@ -168,6 +171,7 @@
                 productDescription: null,
                 invoicePending: null,
                 invoiceDraft: null,
+                invoicePaid: null,
                 invoiceItemList: [],
                 invoiceTotal: 0
             }
@@ -183,17 +187,24 @@
         },
 
         methods: {
-            ...mapMutations(["TOGGLE_INVOICE", "TOGGLE_WARNING_MODAL"]),
+            ...mapMutations(["TOGGLE_INVOICE", "TOGGLE_WARNING_MODAL", "TOGGLE_EDIT_INVOICE"]),
 
             checkClick(e) {
                 if (e.target === this.$refs.invoiceWrap ) {
-                    this.TOGGLE_WARNING_MODAL();
+                    if(this.invoiceItemList.length <= 0){
+                        this.TOGGLE_INVOICE();
+                    } else{
+                        this.TOGGLE_WARNING_MODAL();
+                    }
                 }
             },
 
             closeInvoice() {
                 if (this.invoiceItemList.length <= 0) {
                    this.TOGGLE_INVOICE();
+                   if(this.editInvoice){
+                       this.TOGGLE_EDIT_INVOICE();
+                   }
                 } else {
                     this.TOGGLE_WARNING_MODAL();
                 }
@@ -260,16 +271,21 @@
                                 clientCity: this.clientCity,
                                 clientZipCode: this.clientZipCode,
                                 clientCountry: this.clientCountry,
+                                invoiceDateUnix: this.invvoiceDateUnix,
+                                invoiceDate: this.invoiceDate,
                                 paymentTerms: this.paymentTerms,
                                 paymentDueDate: this.paymentDueDate,
                                 paymentDueDateUnix: this.paymentDueDateUnix,
                                 productDescription: this.productDescription,
                                 invoiceItemList: this.invoiceItemList,
                                 invoiceTotal: this.invoiceTotal,
+                                invoicePending: this.invoicePending,
+                                invoiceDraft: this.invoiceDraft,
+                                invoicePaid: null,
                             }
                         );
                 } catch (e) {
-                    alert("failed to add invoice: ", e)
+                    alert("failed to add invoice: make sure you entered the data correctly and check connection", e)
                 }
             
                 this.loading = false;
@@ -282,6 +298,10 @@
                 this.uploadInvoice();
             }
 
+        },
+
+        computed:{
+            ...mapState(["editInvoice"]),
         },
 
         watch: {
@@ -334,6 +354,10 @@
         flex: 1;
     }
 
+    .title-bar h1{
+        font-size: 23px;
+    }
+
     .close{
         color: #ec5757;
         cursor: pointer;
@@ -378,9 +402,14 @@
         outline: none;
     }
 
+    select{
+        cursor: pointer;
+    }
+
     option{
         background-color: #fff;
         color: #1e2139;
+        cursor: pointer;
     }
 
     option:hover{
@@ -408,11 +437,6 @@
     .location-details div{
         flex: 1;
     }
-
-    /* invoice-work */
-    /* .invoice-work{
-
-    } */
 
     .payment{
         gap: 19px;

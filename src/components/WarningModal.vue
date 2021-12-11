@@ -13,13 +13,13 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations, mapState } from "vuex";
 
 export default {
     name: "warningModal",
 
     methods: {
-        ...mapMutations(["TOGGLE_INVOICE", "TOGGLE_WARNING_MODAL"]),
+        ...mapMutations(["TOGGLE_INVOICE", "TOGGLE_WARNING_MODAL", "TOGGLE_EDIT_INVOICE"]),
 
         closeModal() {
             this.TOGGLE_WARNING_MODAL();
@@ -28,8 +28,15 @@ export default {
         closeInvoice() {
             this.TOGGLE_WARNING_MODAL();
             this.TOGGLE_INVOICE();
+            if (this.editInvoice){
+                this.TOGGLE_EDIT_INVOICE();
+            }
         }
-    }
+    },
+     
+    computed: {
+        ...mapState(["editInvoice"])
+    } 
 }
 </script>
 
@@ -50,16 +57,16 @@ export default {
     }
 
     .modal-content{
-        border-radius: 20px;
-        padding: 48px  32px;
-        max-width: 320px;
+        border-radius: 32px;
+        padding: 35px  32px;
+        max-width: 360px;
         background-color: #252945;
         color: #fff;
     }
 
     p{
         text-align: center;
-        font-size: 13px;
+        font-size: 16px;
     }
 
     .actions{
