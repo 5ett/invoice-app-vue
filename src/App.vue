@@ -19,7 +19,7 @@
 </template>
 
 <script>
-  import {mapState} from "vuex";
+  import {mapState, mapActions} from "vuex";
   import Navigation from "./components/Navigation";
   import InvoiceModal from "./components/InvoiceModal";
   import WarningModal from "./components/WarningModal";
@@ -38,11 +38,15 @@
     },
 
     created() {
+      this.GET_INVOICES();
       this.checkScreen();
       window.addEventListener("resize", this.checkScreen);
     },
       
     methods: {
+
+      ...mapActions(["GET_INVOICES"]),
+
       checkScreen() {
         const windowWidth = window.innerWidth;
         if (windowWidth <= 750) {
@@ -114,8 +118,8 @@
   button,
   .button {
     cursor: pointer;
-    padding: 16px 24px;
-    border-radius: 30px;
+    padding: 10px 24px;
+    border-radius: 6px;
     border: none;
     font-size: 12px;
     margin-right: 8px;
