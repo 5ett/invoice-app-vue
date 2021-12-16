@@ -10,6 +10,8 @@ export default createStore({
     invoicesLoaded: null,
     currentInvoiceArray: [],
     editInvoice: null,
+    toastNotification: null,
+    toastMessage: null,
   },
 
   mutations: {
@@ -38,7 +40,17 @@ export default createStore({
     TOGGLE_EDIT_INVOICE(state){
       state.editInvoice = !state.editInvoice;
     },
+
+    SET_TOAST_MESSAGE(state, payload) {
+      state.toastMessage = payload;
+      console.log(payload)
+    },
+
+    TOGGLE_TOAST(state) {
+      state.toastNotification = !state.toastNotification;
+    }
   },
+
   actions: {
     async GET_INVOICES({commit, state}){
       const getData = collection(db,"invoices");
@@ -77,7 +89,14 @@ export default createStore({
         );
 
         if (state.invoiceData.length > 0){
-          commit('INVOICES_LOADED')
+          commit('INVOICES_LOADED');
+        }else{
+           const toastMessageMeta = {
+              message: "Failed to load invoices, check connection",
+              category: "danger"
+           }
+          commit('SET_TOAST_MESSAGE', toastMessageMeta);
+          commit('TOGGLE_TOAST');
         };
     }
   },
