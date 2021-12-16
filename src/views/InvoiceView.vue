@@ -158,20 +158,20 @@ export default {
   }
 
   .left{
-    align-items: center;
+    /* align-items: center; */
   }
 
-  .left span{
-    colr: #dfe3fa;
+  .header .left span{
+    color: #dfe3fa;
     margin-right: 16px;
   }
 
-  .right{
+  .header .right{
     flex: 1;
     justify-content: flex-end;
   }
 
-  .right button{
+  .header .right button{
     color: #fff;
   }
 
@@ -185,26 +185,26 @@ export default {
     flex: 1;
   }
 
-  .left{
+  .top .left{
     font-size: 12px;
   }
 
-  .left P:first-child{
+  .top .left P:first-child{
     font-size: 24px;
     text-transform: uppercase;
     color: #fff;
     margin-bottom: 8px;
   }
 
-  .left p:nth-child(2){
+  .top .left p:nth-child(2){
     font-size: 16px;
   }
 
-  .left span{
+  .top .left span{
     color: #888eb0;
   }
 
-  .right {
+  .top .right {
     font-size: 12px;
     align-items: flex-end;
   }
@@ -271,7 +271,7 @@ export default {
   }
   .heading p{
     flex: 1;
-
+    text-align: right;
   }
 
   .heading p:first-child{
