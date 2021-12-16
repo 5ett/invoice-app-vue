@@ -7,6 +7,10 @@
         <transition name="invoice">
           <InvoiceModal v-if='invoiceModal' />
         </transition>
+
+        <transition name="slide">
+          <Toast v-if="toastNotification" />
+        </transition>
         <router-view/>
       </div>
     </div>
@@ -23,6 +27,7 @@
   import Navigation from "./components/Navigation";
   import InvoiceModal from "./components/InvoiceModal";
   import WarningModal from "./components/WarningModal";
+  import Toast from "./components/Toast";
 
   export default {
     data() {
@@ -35,6 +40,7 @@
       Navigation,
       InvoiceModal,
       WarningModal,
+      Toast,
     },
 
     created() {
@@ -58,7 +64,7 @@
     },
 
     computed: {
-      ...mapState(["invoiceModal", "warningModal"]),
+      ...mapState(["invoiceModal", "warningModal", "toastNotification"]),
     },
     
   }
@@ -71,6 +77,7 @@
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
     list-style: none;
+    text-decoration: none;
   }
 
   .app{
@@ -185,11 +192,11 @@
   }
 
   .status-button{
-    font-size: 12px;
+    font-size: 10px;
     margin-right: 30px;
     align-items: center;
-    padding: 8px 30px;
-    border-radius: 10px;
+    padding: 7px 13px;
+    border-radius: 7px;
   }
 
   .paid::before {
@@ -217,5 +224,15 @@
   .draft {
     color: #dfe3fa;
     background-color: rgba(223, 227, 250, 0.1);
+  }
+
+  .slide-enter-from,
+  .slide-leave-to{
+    opacity: 0;
+  }
+
+  .slide-enter-active,
+  .slide-leave-active{
+    transition: opacity 0.5s ease-out;
   }
 </style>

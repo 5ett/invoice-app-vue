@@ -35,13 +35,15 @@
         margin-bottom: 16px;
         color: #fff;
         border-radius: 12px;
-        padding: 28px 32px;
+        padding: 13px;
         background-color: #1e2139;
         align-items: center;
+        font-size: 13px;
     }
 
     .left{
         align-items: center;
+        text-align: left;
         flex-basis: 60%;
         gap: 16px;
     }
@@ -62,7 +64,7 @@
 
     .price{
         flex: 1;
-        font-size: 16px;
+        font-size: 13px;
         font-weight:600px;
     }
 </style>
