@@ -11,6 +11,7 @@
         <transition name="slide">
           <Toast v-if="toastNotification" />
         </transition>
+        
         <router-view/>
       </div>
     </div>
@@ -51,7 +52,7 @@
       
     methods: {
 
-      ...mapActions(["GET_INVOICES"]),
+      ...mapActions(["GET_INVOICES", "TOGGLE_TOAST"]),
 
       checkScreen() {
         const windowWidth = window.innerWidth;
@@ -60,12 +61,23 @@
           return;
         }
         this.mobile = false;
-      }  
+      },
+      
+      // switchOffToast() {
+      //   if(this.toastNotification){
+      //     this.TOGGLE_TOAST();
+      //   }
+      // },
+
     },
 
     computed: {
       ...mapState(["invoiceModal", "warningModal", "toastNotification"]),
     },
+
+    watch:{
+      
+    }
     
   }
 </script>

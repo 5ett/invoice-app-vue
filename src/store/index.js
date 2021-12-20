@@ -17,6 +17,7 @@ export default createStore({
   mutations: {
     TOGGLE_INVOICE(state) {
       state.invoiceModal = !state.invoiceModal;
+      console.log(state.invoiceModal);
     },
 
     TOGGLE_WARNING_MODAL(state) {
@@ -39,6 +40,10 @@ export default createStore({
 
     TOGGLE_EDIT_INVOICE(state){
       state.editInvoice = !state.editInvoice;
+    },
+
+    DELETE_INVOICE(state, payload) {
+      state.invoiceData = state.invoiceData.filter(invoice => invoice.docId !== payload)
     },
 
     SET_TOAST_MESSAGE(state, payload) {
@@ -90,6 +95,12 @@ export default createStore({
 
         if (state.invoiceData.length > 0){
           commit('INVOICES_LOADED');
+          const toastMessageMeta = {
+            message: 'Successfully loaded invoices',
+            category: 'success'
+          }
+          commit('SET_TOAST_MESSAGE', toastMessageMeta);
+          commit('TOGGLE_TOAST');
         }else{
            const toastMessageMeta = {
               message: "Failed to load invoices, check connection",
@@ -98,8 +109,28 @@ export default createStore({
           commit('SET_TOAST_MESSAGE', toastMessageMeta);
           commit('TOGGLE_TOAST');
         };
+
+        // if(state.toastNotification){
+        //   setTimeout(commit('TOGGLE_TOAST'), 5000);
+        // }
+    },
+
+    async UPDATE_INVOICE({commit, dispatch}, {docId, routeId}) {
+        commit('DELETE_INVOICE', docId);
+        await dispatch('GET_INVOICES');
+        commit('TOGGLE_EDIT_INVOICE');
+        commit('TOGGLE_INVOICE');
+        commit('SET_CURRENT_INVOICE', routeId);
+
+        const toastMessageMeta = {
+            message: "Successfully updated invoice!",
+            category: "success"
+        }
+        commit('SET_TOAST_MESSAGE', toastMessageMeta);
+        commit('TOGGLE_TOAST');
     }
   },
+
   modules: {
   }
 })

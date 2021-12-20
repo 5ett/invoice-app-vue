@@ -1,7 +1,7 @@
 <template>
     <router-link class="invoice flex" :to="{ name: 'Invoice', params:{invoiceId: invoice.invoiceId}}">
         <div class="left flex">
-            <span class="tracking-number">{{ invoice.InvoiceId }}</span>
+            <span class="tracking-number">#{{ invoice.invoiceId }}</span>
             <span class="due-date">{{ invoice.paymentDueDate }}</span>
             <span class="person">{{ invoice.clientName }}</span>
         </div>
@@ -35,7 +35,7 @@
         margin-bottom: 16px;
         color: #fff;
         border-radius: 12px;
-        padding: 13px;
+        padding: 13px 36px;
         background-color: #1e2139;
         align-items: center;
         font-size: 13px;
@@ -45,7 +45,7 @@
         align-items: center;
         text-align: left;
         flex-basis: 60%;
-        gap: 16px;
+        gap: 8px;
     }
 
     .left span{

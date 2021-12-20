@@ -17,6 +17,7 @@ export default {
     z-index: 99;
     background-color: #30355c !important;
     border-right: 1px solid #fff;
+    position: relative;
   }
 
   .branding{
@@ -24,7 +25,8 @@ export default {
     background-color: #7c5dfa;
     justify-content: center;
     padding: 24px;
-  }
+    position: fixed;
+  } 
 
   .branding img{
     width: auto;
@@ -36,6 +38,7 @@ export default {
       min-height: 100%;
       min-width: 90px;
       flex-direction: column;
+      background-color: #30355c !important;
       border-radius: 0 20px 20px 0;
     }
 
