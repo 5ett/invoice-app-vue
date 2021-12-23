@@ -24,7 +24,7 @@
 </template>
 
 <script>
-  import {mapState, mapActions} from "vuex";
+  import {mapState, mapActions, mapMutations} from "vuex";
   import Navigation from "./components/Navigation";
   import InvoiceModal from "./components/InvoiceModal";
   import WarningModal from "./components/WarningModal";
@@ -47,12 +47,14 @@
     created() {
       this.GET_INVOICES();
       this.checkScreen();
+      // this.switchOffToast();
       window.addEventListener("resize", this.checkScreen);
     },
       
     methods: {
 
-      ...mapActions(["GET_INVOICES", "TOGGLE_TOAST"]),
+      ...mapMutations(["TOGGLE_TOAST", "SET_TOAST_MESSAGE"]),
+      ...mapActions(["GET_INVOICES",]),
 
       checkScreen() {
         const windowWidth = window.innerWidth;
@@ -62,21 +64,14 @@
         }
         this.mobile = false;
       },
-      
-      // switchOffToast() {
-      //   if(this.toastNotification){
-      //     this.TOGGLE_TOAST();
-      //   }
-      // },
-
     },
 
     computed: {
-      ...mapState(["invoiceModal", "warningModal", "toastNotification"]),
+      ...mapState(["invoiceModal", "warningModal", "toastNotification", "toastMessage"]),
     },
 
     watch:{
-      
+
     }
     
   }
