@@ -217,7 +217,7 @@
         methods: {
             ...mapMutations(["TOGGLE_INVOICE", "TOGGLE_WARNING_MODAL", "TOGGLE_EDIT_INVOICE", "SET_TOAST_MESSAGE", "TOGGLE_TOAST"]),
 
-            ...mapActions(["UPDATE_INVOICE"]),
+            ...mapActions(["UPDATE_INVOICE", "GET_INVOICES"]),
 
             checkClick(e) {
                 if (e.target === this.$refs.invoiceWrap ) {
@@ -316,11 +316,11 @@
                         );
                 } catch (e) {
                     alert("failed to add invoice: make sure you entered the data correctly and check connection", e)
-                }
-            
+                };
+                
                 this.loading = false;
-
                 this.TOGGLE_INVOICE();
+                this.GET_INVOICES();
             }, 
 
             async updateInvoice() {
@@ -333,11 +333,11 @@
 
                 this.calInvoiceTotal();
 
-                const database = doc(db, 'invoices', this.docId);
+                const docToUpdate = doc(db, 'invoices', this.docId);
 
                 try {
                         await updateDoc(
-                            database,
+                            docToUpdate,
                             {
                                 billerStreetAddress: this.billerStreetAddress,
                                 billerCity: this.billerCity,
