@@ -1,7 +1,7 @@
 <template>
     <!-- <div class="flex" :class="red: danger, blue: info, green: success"> -->
     <transition>
-        <div class="blanket flex">
+        <div class="blanket-toast flex">
             <div class="toast flex flex-column" 
             :class="{ 
                 red: warningItem.category === 'danger',
@@ -48,7 +48,8 @@
 </script>
 
 <style lang="css" scoped>
-    .blanket{
+    .blanket-toast{
+        z-index: 1200;
         align-items: center;
         justify-content: center;
         /* position: relative; */
@@ -60,8 +61,8 @@
         padding: 20px;
         color: #fff;
         border-radius: 9px;
-        position:absolute;
-        bottom: 3em;
+        position:fixed;
+        top: 3em;
         -webkit-animation: ease-in-out;
 
         /* bottom */

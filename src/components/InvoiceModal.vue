@@ -141,9 +141,9 @@
 
 <script>
     import db from "../firebase/firebaseInit";
-    import { collection, addDoc} from "firebase/firestore";
+    import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
     import Loading from "../components/Loading"
-    import {mapMutations, mapState} from "vuex";
+    import { mapMutations, mapState, mapActions } from "vuex";
     import {uid} from "uid"
 
     export default {
@@ -153,6 +153,7 @@
             return {
                 dateOptions: { year: "numeric", month: "short", day: "numeric" },
                 loading: null,
+                docId : null,
                 billerStreetAddress: null,
                 billerCity: null,
                 billerZipCode: null,
@@ -182,12 +183,41 @@
         },
 
         created() {
-            this.invoiceDateUnix = Date.now();
+            if(!this.editInvoice) {
+                this.invoiceDateUnix = Date.now();
             this.invoiceDate = new Date(this.invoiceDateUnix).toLocaleDateString("en-us", this.dateOptions)
+            };
+            
+            if(this.editInvoice) {
+                const currentInvoice = this.currentInvoiceArray[0];
+                this.docId = currentInvoice.docId;
+                this.billerStreetAddress = currentInvoice.billerStreetAddress;
+                this.billerCity = currentInvoice.billerCity;
+                this.billerZipCode = currentInvoice.billerZipCode;
+                this.billerCountry = currentInvoice.billerCountry;
+                this.clientName  = currentInvoice.clientName;
+                this.clientEmail = currentInvoice.clientEmail;
+                this.clientStreetAddress = currentInvoice.clientStreetAddress;
+                this.clientCity = currentInvoice.clientCity;
+                this.clientZipCode = currentInvoice.clientZipCode;
+                this.clientCountry = currentInvoice.clientCountry;
+                this.invvoiceDateUnix = currentInvoice.invvoiceDateUnix;
+                this.invoiceDate = currentInvoice.invoiceDate;
+                this.paymentTerms = currentInvoice.paymentTerms;
+                this.paymentDueDateUnix = currentInvoice.paymentDueDateUnix;
+                this.paymentDueDate = currentInvoice.paymentDueDate;
+                this.productDescription = currentInvoice.productDescription;
+                this.invoicePending = currentInvoice.invoicePending;
+                this.invoiceDraft = currentInvoice.invoiceDraft;
+                this.invoiceItemList = currentInvoice.invoiceItemList;
+                this.invoiceTotal = currentInvoice.invoiceTotal;
+            };
         },
 
         methods: {
-            ...mapMutations(["TOGGLE_INVOICE", "TOGGLE_WARNING_MODAL", "TOGGLE_EDIT_INVOICE"]),
+            ...mapMutations(["TOGGLE_INVOICE", "TOGGLE_WARNING_MODAL", "TOGGLE_EDIT_INVOICE", "SET_TOAST_MESSAGE", "TOGGLE_TOAST"]),
+
+            ...mapActions(["UPDATE_INVOICE"]),
 
             checkClick(e) {
                 if (e.target === this.$refs.invoiceWrap ) {
@@ -292,16 +322,74 @@
 
                 this.TOGGLE_INVOICE();
             }, 
-             
+
+            async updateInvoice() {
+                if (this.invoiceItemList.length <= 0) {
+                    alert('Please add items to invoice');
+                    return
+                }
+
+                this.loading = true;
+
+                this.calInvoiceTotal();
+
+                const database = doc(db, 'invoices', this.docId);
+
+                try {
+                        await updateDoc(
+                            database,
+                            {
+                                billerStreetAddress: this.billerStreetAddress,
+                                billerCity: this.billerCity,
+                                billerZipCode: this.billerZipCode,
+                                billerCountry: this.billerCountry,
+                                clientName: this.clientName,
+                                clientEmail: this.clientEmail,
+                                clientStreetAddress: this.clientStreetAddress,
+                                clientCity: this.clientCity,
+                                clientZipCode: this.clientZipCode,
+                                clientCountry: this.clientCountry,
+                                paymentTerms: this.paymentTerms,
+                                paymentDueDate: this.paymentDueDate,
+                                paymentDueDateUnix: this.paymentDueDateUnix,
+                                productDescription: this.productDescription,
+                                invoiceItemList: this.invoiceItemList,
+                                invoiceTotal: this.invoiceTotal,
+                            }
+                        );
+
+                } catch (e) {
+                    const alertMessage = {
+                        message: 'Failed to update invoice, check connection',
+                        category: 'danger'
+                    }
+
+                    this.SET_TOAST_MESSAGE(alertMessage);
+                    this.TOGGLE_TOAST();
+                }
+            
+                this.loading = false;
+
+                const data = {
+                    docId: this.docId,
+                    routeId: this.$route.params.invoiceId,
+                };
+
+                this.UPDATE_INVOICE(data);
+            },
 
             submitForm() {
+                if(this.editInvoice){
+                    this.updateInvoice();
+                    return
+                }
                 this.uploadInvoice();
             }
 
         },
 
         computed:{
-            ...mapState(["editInvoice"]),
+            ...mapState(["editInvoice", "currentInvoiceArray"]),
         },
 
         watch: {
@@ -331,7 +419,7 @@
 
     .invoice-content{
         position: relative;
-        padding: 56px;
+        padding:56px;
         width: 100%;
         max-width: 600px;
         background-color: #141625;
@@ -511,11 +599,12 @@
         margin-top: 60px;
     }
 
-    .save div{
+    .save .left{
         flex: 1;
     }
 
     .save .right{
+        flex: 1;
         justify-content: flex-end;
     }
 </style>
