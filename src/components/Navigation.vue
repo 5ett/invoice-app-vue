@@ -1,5 +1,5 @@
 <template>
-    <header class="flex flex-column">
+    <header class="flex">
       <div class="branding flex"> 
           <img src="@/assets/file-invoice-dollar-solid.png" alt="">
       </div>
@@ -13,19 +13,18 @@ export default {
 </script>
 
 <style lang="css" scoped>
-  .header{
-    z-index: 99;
+  header{
+    z-index: 1000;
     background-color: #30355c !important;
-    border-right: 1px solid #fff;
-    position: relative;
+    position: fixed;
   }
 
   .branding{
     border-radius: 0 20px 20px 0;
     background-color: #7c5dfa;
     justify-content: center;
-    padding: 24px;
-    position: fixed;
+    padding: 15px;
+    /* position: fixed; */
   } 
 
   .branding img{
@@ -34,17 +33,16 @@ export default {
   }
 
   @media (min-width: 900px) {
-    .header{
+    header{
       min-height: 100%;
-      min-width: 90px;
+      min-width: 56px;
       flex-direction: column;
       background-color: #30355c !important;
-      border-radius: 0 20px 20px 0;
+      border-radius: 0 20px 0 0;
     }
 
-    .header .branding{
+    .branding{
       width: 100%;
-
     }
   }
 </style>

@@ -32,13 +32,30 @@
     .invoice{
         cursor: pointer;
         gap: 16px;
-        margin-bottom: 16px;
         color: #fff;
-        border-radius: 12px;
         padding: 13px 36px;
-        background-color: #1e2139;
         align-items: center;
         font-size: 13px;
+        box-shadow: 0 4px 6px -23px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    .invoice:nth-child(odd){
+        background-color: #1e2139;
+    }
+
+    .invoice:nth-child(even){
+        background-color: #141625;
+    }
+
+    .invoice:first-child{
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+        box-shadow: 0 4px 6px -23px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    .invoice:last-child{
+        border-bottom-left-radius: 7px;
+        border-bottom-right-radius: 7px;
+        box-shadow: 0 -5px -5px -3px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
 
     .left{
@@ -50,6 +67,9 @@
 
     .left span{
         flex: 1;
+    }
+    .left .person{
+        flex: 2 !important;
     }
 
     .tracking-number{

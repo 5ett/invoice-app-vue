@@ -42,7 +42,7 @@ export default {
 
 <style lang="css" scoped>
     .blanket{
-        z-index: 100;
+        z-index: 66;
         position: fixed;
         height: 100%;
         width: 100%;

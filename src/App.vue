@@ -8,7 +8,7 @@
           <InvoiceModal v-if='invoiceModal' />
         </transition>
 
-        <transition name="slide">
+        <transition name="toast">
           <Toast v-if="toastNotification" />
         </transition>
         
@@ -71,7 +71,12 @@
     },
 
     watch:{
-
+      toastNotification() {
+        if(this.toastNotification){
+          setTimeout(() => this.TOGGLE_TOAST(), 5000);
+          console.log('success');
+        }
+      }
     }
     
   }
@@ -93,7 +98,6 @@
   }
 
   .app .app-content{
-    padding: 0 20px;
     flex: 1;
     position: relative;
   }
@@ -200,6 +204,8 @@
 
   .status-button{
     font-size: 10px;
+    min-width: 86px;
+    justify-content: center;
     margin-right: 30px;
     align-items: center;
     padding: 7px 13px;
@@ -233,13 +239,20 @@
     background-color: rgba(223, 227, 250, 0.1);
   }
 
-  .slide-enter-from,
-  .slide-leave-to{
+  .toast-enter-from,
+  .toast-leave-to {
     opacity: 0;
+    transform: translateY(-60px)
   }
 
-  .slide-enter-active,
-  .slide-leave-active{
-    transition: opacity 0.5s ease-out;
+  .toast-enter-to,
+  .toast-leave-from{
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .toast-enter-active,
+  .toast-leave-active{
+    transition: all 0.3s ease;
   }
 </style>

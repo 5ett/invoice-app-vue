@@ -1,20 +1,17 @@
 <template>
-    <!-- <div class="flex" :class="red: danger, blue: info, green: success"> -->
-    <transition>
-        <div class="blanket-toast flex">
-            <div class="toast flex flex-column" 
-            :class="{ 
-                red: warningItem.category === 'danger',
-                blue: warningItem.category === 'info',
-                green: warningItem.category === 'success',
-             }"
-            >    
+    <div class="blanket-toast flex">
+        <div class="toast flex flex-column" 
+        :class="{ 
+            red: warningItem.category === 'danger',
+            blue: warningItem.category === 'info',
+            green: warningItem.category === 'success',
+            }"
+        >    
             <div class="flex toast-content">
                 <p>{{ warningItem.message }}</p>
             </div>
         </div>
-        </div>
-    </transition>
+    </div>
 </template>
 
 <script>
