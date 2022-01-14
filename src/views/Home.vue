@@ -26,7 +26,10 @@
     </div>
 
     <div v-if="invoicesLoaded">
+      
       <Invoice v-for="(invoice, index) in filteredData" :invoice="invoice" :key="index" />  
+      <!-- <transition name="invoise">
+      </transition>   -->
     </div>
     <div v-else class="flex flex-column empty">
       <transition name="notification">
@@ -95,7 +98,7 @@ export default {
           if(this.filteredInvoice === "Pending"){
             return invoice.invoicePending === true;
           }
-          if(this.filteredInvoice === "Draft"){
+          if(this.filteredInvoice === "Paid"){
             return invoice.invoicePaid === true;
           }
           return invoice;
@@ -220,19 +223,40 @@ export default {
     margin-top: 5px;
   }
 
+/* transitions */
+
   .notification-enter-active,
   .notification-leave-active{
-    transition: 0.8s ease all;
+    transition: 0.4s all ease;
   }
 
-  .notification-enter-from{
-    transform: translateX(40px);
-    opacity: 1;
-  }
-
+  .notification-enter-from,
   .notification-leave-to{
-    opacity: 0;
     transform: translateX(-40px);
+    opacity: 0;
+  }
+
+  .notification-leave-from,
+  .notification-enter-to{
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .invoise-enter-from,
+  .invoise-leave-to{
+    opacity:0;
+    transform: translateX(-30px)
+  }
+
+  .invoice-enter-to,
+  .invoise-leave-from{
+    opacity:1;
+    transform: translateX(0)
+  }
+
+  .invoise-enter-active,
+  .invoise-leave-active{
+    transition: 0.3s all ease-in-out;
   }
 
 </style>

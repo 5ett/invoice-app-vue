@@ -140,7 +140,6 @@ export default createStore({
         commit('DELETE_INVOICE', docId);
         await dispatch('GET_INVOICES');
         commit('TOGGLE_EDIT_INVOICE');
-        // commit('TOGGLE_INVOICE');
         commit('SET_CURRENT_INVOICE', routeId);
 
         const toastMessageMeta = {
@@ -148,7 +147,6 @@ export default createStore({
             category: "success"
         }
         commit('SET_TOAST_MESSAGE', toastMessageMeta);
-        commit('TOGGLE_TOAST');
     },
 
     async DELETE_INVOICE({commit}, docId) {
@@ -165,7 +163,7 @@ export default createStore({
           invoicePending: false,
         }
       );
-      commit('UPDATE_TO_PAID', docId)
+      commit('UPDATE_TO_PAID', docId);
     },
 
     async UPDATE_TO_PENDING({commit}, docId) {
@@ -177,7 +175,7 @@ export default createStore({
           invoiceDraft: false, 
         }
       );
-      commit('UPDATE_TO_PAID', docId)
+      commit('UPDATE_TO_PENDING', docId);
     }
 
   },

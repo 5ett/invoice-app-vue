@@ -231,10 +231,11 @@
 
             closeInvoice() {
                 if (this.invoiceItemList.length <= 0) {
-                   this.TOGGLE_INVOICE();
-                   if(this.editInvoice){
+                   this.TOGGLE_INVOICE(); 
+                }
+                else if(this.editInvoice){
                        this.TOGGLE_EDIT_INVOICE();
-                   }
+                       this.TOGGLE_INVOICE();
                 } else {
                     this.TOGGLE_WARNING_MODAL();
                 }
@@ -365,7 +366,7 @@
                     }
 
                     this.SET_TOAST_MESSAGE(alertMessage);
-                    this.TOGGLE_TOAST();
+                    // this.TOGGLE_TOAST();
                 }
             
                 this.loading = false;
@@ -424,7 +425,7 @@
         max-width: 600px;
         background-color: #141625;
         color: #fff;
-        box-shadow: 10px 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        box-shadow: 4px 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
 
     .invoive-content h1{
@@ -507,7 +508,7 @@
 
     @media (min-width: 900px) {
         .invoice-wrap{
-            left: 90px;
+            left: 56px;
         }
     }
 
