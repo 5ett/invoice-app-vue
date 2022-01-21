@@ -46,8 +46,16 @@
 
     created() {
       this.GET_INVOICES();
+
       this.checkScreen();
-      // this.switchOffToast();
+
+      if(this.user){
+        console.log("user logged in")
+      } else{
+        console.log("user not logged in")
+        return
+      }
+
       window.addEventListener("resize", this.checkScreen);
     },
       
@@ -55,6 +63,8 @@
 
       ...mapMutations(["TOGGLE_TOAST", "SET_TOAST_MESSAGE"]),
       ...mapActions(["GET_INVOICES",]),
+
+
 
       checkScreen() {
         const windowWidth = window.innerWidth;
@@ -67,22 +77,24 @@
     },
 
     computed: {
-      ...mapState(["invoiceModal", "warningModal", "toastNotification", "toastMessage"]),
+      ...mapState(["invoiceModal", "warningModal", "toastNotification", "toastMessage", "isLoggedIn", "user"]),
     },
 
     watch:{
       toastNotification() {
         if(this.toastNotification){
-          setTimeout(() => this.TOGGLE_TOAST(), 5000);
+          setTimeout(() => this.TOGGLE_TOAST(), 3000);
           console.log('success');
         }
-      }
+      },
     }
     
   }
 </script>
 
 <style lang="css">
+  /* @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"); */
+
   * {
     margin: 0;
     padding: 0;
