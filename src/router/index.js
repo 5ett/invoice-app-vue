@@ -16,13 +16,13 @@ const routes = [
   },
   {
     path: '/login',
-    name: 'Authentication',
+    name: 'Login',
     component: Pass,
   }
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(process.env.BASE_URL),
   routes
 })
 

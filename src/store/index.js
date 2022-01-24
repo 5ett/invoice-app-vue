@@ -1,10 +1,12 @@
-import { createStore, storeKey } from "vuex";
+import { createStore, storeKey, useStore } from "vuex";
 import db from "../firebase/firebaseInit";
 import { getDocs, collection, updateDoc, deleteDoc, doc} from "firebase/firestore";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth"
+import { signInWithEmailAndPassword, onAuthStateChanged, signOut, getAuth } from "firebase/auth";
+import { useRouter } from "vue-router";
 
-const auth = getAuth()
-
+const auth = getAuth();
+const inStore = useStore();
+const router = useRouter
 
 export default createStore({
   state: {
@@ -92,11 +94,14 @@ export default createStore({
   },
 
   actions: {
-    async SIGN_IN_USER({commit}, {email, password}){
+    async SIGN_IN_USER({commit,state}, {email, password}){
       const result = await signInWithEmailAndPassword(auth, email, password)
       if(result) {
         commit("SET_USER", result.user);
         commit("CHANGE_AUTH_STATE", true);
+        if (state.toastMessage){
+          commit('TOGGLE_TOAST')
+        }
       } else{
         throw new Error('could not complete signup');
       }
@@ -151,7 +156,8 @@ export default createStore({
             category: 'success'
           }
           commit('SET_TOAST_MESSAGE', toastMessageMeta);
-          commit('TOGGLE_TOAST');
+
+          // commit('TOGGLE_TOAST');
         }else{
            const toastMessageMeta = {
               message: "Failed to load invoices, check connection",
@@ -212,5 +218,6 @@ export default createStore({
 
   modules: {
   },
+
 });
 

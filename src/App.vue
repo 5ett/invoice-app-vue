@@ -29,6 +29,9 @@
   import InvoiceModal from "./components/InvoiceModal";
   import WarningModal from "./components/WarningModal";
   import Toast from "./components/Toast";
+  import { onAuthStateChanged, getAuth } from "firebase/auth";
+
+  const auth = getAuth();
 
   export default {
     data() {
@@ -49,10 +52,16 @@
 
       this.checkScreen();
 
-      if(this.user){
+      if(this.isLoggedIn){
         console.log("user logged in")
+        try{
+          this.checkUser() 
+        } catch(e){
+          console.log(e.message)
+        }
       } else{
         console.log("user not logged in")
+        this.$router.push({name: "Login"})
         return
       }
 
@@ -61,7 +70,7 @@
       
     methods: {
 
-      ...mapMutations(["TOGGLE_TOAST", "SET_TOAST_MESSAGE"]),
+      ...mapMutations(["TOGGLE_TOAST", "SET_TOAST_MESSAGE", "SET_USER", "CHANGE_AUTH_STATE"]),
       ...mapActions(["GET_INVOICES",]),
 
 
@@ -74,6 +83,13 @@
         }
         this.mobile = false;
       },
+
+      checkUser() {
+        onAuthStateChanged(auth, (user) => {
+          this.SET_USER(user);
+          this.CHANGE_AUTH_STATE(true)
+        })
+      }
     },
 
     computed: {
@@ -87,6 +103,13 @@
           console.log('success');
         }
       },
+
+      isLoggedIn() {
+        onAuthStateChanged(auth, (user) =>{
+          this.SET_USER(user);
+          this.CHANGE_AUTH_STATE(true);
+        })
+      }
     }
     
   }

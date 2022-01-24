@@ -11,7 +11,7 @@
       </nav>
 
       <div class="sub-menu flex">
-        <div v-if="loginStatus" class="profile-img flex flex-column">
+        <div v-if="showNav" class="profile-img flex flex-column">
           <img @click="signOutUser" src="@/assets/iccon.png" alt="">
         </div>
       </div>
@@ -19,39 +19,40 @@
 </template>
 
 <script setup>
-  import { computed, onMounted} from "vue";
   import { useStore } from "vuex";
   import { useRouter } from "vue-router";
-  import { getAuth, onAuthStateChanged } from "firebase/auth";
+  
 
   const store = useStore();
   const router = useRouter();
-  const auth = getAuth();
-
-  const loginStatus = computed(() => store.state.user)
-
-  onMounted(()=>{
-      onAuthStateChanged(auth, (user) => {
-          if (user) {
-            store.commit('SET_USER', user)
-            store.commit('CHANGE_AUTH_STATE', true)
-          } else{
-            router.push("/login")
-            const securityAlert = {
-              message: "Make sure you're logged in first",
-              category: "danger"
-            }
-            store.commit("SET_TOAST_MESSAGE", securityAlert);
-            store.commit("TOGGLE_TOAST");
-          }
-        }
-      )
-    }
-  )
 
   const signOutUser = async () => {
     await store.dispatch('SIGN_OUT_USER');
-    router.push("/login")
+    router.push({name: "Login"})
+  }
+</script>
+
+<script>
+  import { mapState } from "vuex"
+  
+  export default {
+    data(){
+      return{
+        showNav:null
+      }
+    },
+
+    computed: {
+      ...mapState(['isLoggedIn'])
+    },
+
+    watch:{
+      isLoggedIn(){
+        if(this.isLoggedIn){
+          this.showNav=true
+        }
+      }
+    }
   }
 </script>
 

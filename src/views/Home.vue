@@ -61,10 +61,6 @@ export default {
     Invoice,
   },
 
-  beforeCreate(){
-    
-  },
-
   created(){
     
   },
