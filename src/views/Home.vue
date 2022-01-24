@@ -25,13 +25,11 @@
       </div>
     </div>
 
-    <div v-if="invoicesLoaded">
-      
+    <!-- <div v-if="invoicesLoaded">       -->
+    <div>      
       <Invoice v-for="(invoice, index) in filteredData" :invoice="invoice" :key="index" />  
-      <!-- <transition name="invoise">
-      </transition>   -->
     </div>
-    <div v-else class="flex flex-column empty">
+    <!-- <div v-else class="flex flex-column empty">
       <transition name="notification">
         <div>
           <img src="@/assets/illustration-empty.svg"/>
@@ -41,7 +39,7 @@
           </div>
         </div>
       </transition>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -84,11 +82,11 @@ export default {
         return;
       }
       this.filteredInvoice = e.target.innerText;
-    }
+    },
   },
 
   computed: {
-    ...mapState(["invoicesLoaded", "invoiceData"]),
+    ...mapState(["invoicesLoaded", "invoiceData", "isLoggedIn"]),
 
     filteredData() {
       return this.invoiceData.filter(invoice=>{

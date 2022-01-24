@@ -1,6 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
-import InvoiceView from '../views/InvoiceView.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import Home from '../views/Home.vue';
+import InvoiceView from '../views/InvoiceView.vue';
+import Pass from '../views/Pass.vue';
 
 const routes = [
   {
@@ -12,11 +13,16 @@ const routes = [
     path: '/invoice/:invoiceId',
     name: 'Invoice',
     component: InvoiceView,
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Pass,
   }
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(process.env.BASE_URL),
   routes
 })
 

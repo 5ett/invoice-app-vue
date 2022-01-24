@@ -29,6 +29,9 @@
   import InvoiceModal from "./components/InvoiceModal";
   import WarningModal from "./components/WarningModal";
   import Toast from "./components/Toast";
+  import { onAuthStateChanged, getAuth } from "firebase/auth";
+
+  const auth = getAuth();
 
   export default {
     data() {
@@ -46,15 +49,31 @@
 
     created() {
       this.GET_INVOICES();
+
       this.checkScreen();
-      // this.switchOffToast();
+
+      if(this.isLoggedIn){
+        console.log("user logged in")
+        try{
+          this.checkUser() 
+        } catch(e){
+          console.log(e.message)
+        }
+      } else{
+        console.log("user not logged in")
+        this.$router.push({name: "Login"})
+        return
+      }
+
       window.addEventListener("resize", this.checkScreen);
     },
       
     methods: {
 
-      ...mapMutations(["TOGGLE_TOAST", "SET_TOAST_MESSAGE"]),
+      ...mapMutations(["TOGGLE_TOAST", "SET_TOAST_MESSAGE", "SET_USER", "CHANGE_AUTH_STATE"]),
       ...mapActions(["GET_INVOICES",]),
+
+
 
       checkScreen() {
         const windowWidth = window.innerWidth;
@@ -64,18 +83,32 @@
         }
         this.mobile = false;
       },
+
+      checkUser() {
+        onAuthStateChanged(auth, (user) => {
+          this.SET_USER(user);
+          this.CHANGE_AUTH_STATE(true)
+        })
+      }
     },
 
     computed: {
-      ...mapState(["invoiceModal", "warningModal", "toastNotification", "toastMessage"]),
+      ...mapState(["invoiceModal", "warningModal", "toastNotification", "toastMessage", "isLoggedIn", "user"]),
     },
 
     watch:{
       toastNotification() {
         if(this.toastNotification){
-          setTimeout(() => this.TOGGLE_TOAST(), 5000);
+          setTimeout(() => this.TOGGLE_TOAST(), 3000);
           console.log('success');
         }
+      },
+
+      isLoggedIn() {
+        onAuthStateChanged(auth, (user) =>{
+          this.SET_USER(user);
+          this.CHANGE_AUTH_STATE(true);
+        })
       }
     }
     
@@ -83,6 +116,8 @@
 </script>
 
 <style lang="css">
+  /* @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"); */
+
   * {
     margin: 0;
     padding: 0;

@@ -1,6 +1,12 @@
-import { createStore } from "vuex";
+import { createStore, storeKey, useStore } from "vuex";
 import db from "../firebase/firebaseInit";
 import { getDocs, collection, updateDoc, deleteDoc, doc} from "firebase/firestore";
+import { signInWithEmailAndPassword, onAuthStateChanged, signOut, getAuth } from "firebase/auth";
+import { useRouter } from "vue-router";
+
+const auth = getAuth();
+const inStore = useStore();
+const router = useRouter
 
 export default createStore({
   state: {
@@ -12,9 +18,19 @@ export default createStore({
     editInvoice: null,
     toastNotification: null,
     toastMessage: null,
+    user: null,
+    isLoggedIn: false,
   },
 
   mutations: {
+    SET_USER(state, payload) {
+      state.user = payload;
+    },
+
+    CHANGE_AUTH_STATE( state, payload ){
+      state.isLoggedIn = payload;
+    },
+
     TOGGLE_INVOICE(state) {
       state.invoiceModal = !state.invoiceModal;
       console.log(state.invoiceModal);
@@ -78,6 +94,25 @@ export default createStore({
   },
 
   actions: {
+    async SIGN_IN_USER({commit,state}, {email, password}){
+      const result = await signInWithEmailAndPassword(auth, email, password)
+      if(result) {
+        commit("SET_USER", result.user);
+        commit("CHANGE_AUTH_STATE", true);
+        if (state.toastMessage){
+          commit('TOGGLE_TOAST')
+        }
+      } else{
+        throw new Error('could not complete signup');
+      }
+    },
+
+    async SIGN_OUT_USER({commit}){
+      await signOut(auth)
+      commit("SET_USER", null)
+      commit("CHANGE_AUTH_STATE", false);
+    },
+
     async GET_INVOICES({commit, state}){
       const getData = collection(db,"invoices");
       const result = await getDocs(getData);
@@ -114,14 +149,15 @@ export default createStore({
           }
         );
 
-        if (state.invoiceData.length > 0){
+        if (state.invoiceData.length > 0  ){
           commit('INVOICES_LOADED');
           const toastMessageMeta = {
             message: 'Successfully loaded invoices',
             category: 'success'
           }
           commit('SET_TOAST_MESSAGE', toastMessageMeta);
-          commit('TOGGLE_TOAST');
+
+          // commit('TOGGLE_TOAST');
         }else{
            const toastMessageMeta = {
               message: "Failed to load invoices, check connection",
@@ -181,5 +217,7 @@ export default createStore({
   },
 
   modules: {
-  }
-})
+  },
+
+});
+
